@@ -6,30 +6,49 @@ import { Table, Category, MenuItem } from '@/types';
 export async function getValidatedTable(
   tableParam: string | undefined | null
 ): Promise<Table | null> {
-  if (!tableParam || typeof tableParam !== 'string') {
-    return null;
-  }
-
   const supabase = await createClient();
 
-  const trimmed = tableParam.trim();
-  const isNumeric = /^\d+$/.test(trimmed);
+  // If a table parameter is provided, validate it against active database tables
+  if (tableParam && typeof tableParam === 'string' && tableParam.trim() !== '') {
+    const trimmed = tableParam.trim();
+    const isNumeric = /^\d+$/.test(trimmed);
 
-  let query = supabase.from('tables').select('*').eq('is_active', true);
+    let query = supabase.from('tables').select('*').eq('is_active', true);
 
-  if (isNumeric) {
-    query = query.eq('table_number', parseInt(trimmed, 10));
-  } else {
-    query = query.eq('qr_token', trimmed);
+    if (isNumeric) {
+      query = query.eq('table_number', parseInt(trimmed, 10));
+    } else {
+      query = query.eq('qr_token', trimmed);
+    }
+
+    const { data } = await query.single();
+    if (data) {
+      return data as Table;
+    }
   }
 
-  const { data, error } = await query.single();
+  // Graceful Fallback: Query first active table from database or fallback to Table 1
+  const { data: fallbackData } = await supabase
+    .from('tables')
+    .select('*')
+    .eq('is_active', true)
+    .order('table_number', { ascending: true })
+    .limit(1)
+    .maybeSingle();
 
-  if (error || !data) {
-    return null;
+  if (fallbackData) {
+    return fallbackData as Table;
   }
 
-  return data as Table;
+  // Final fallback Table 1
+  return {
+    id: '00000000-0000-0000-0000-000000000001',
+    table_number: 1,
+    qr_token: '1',
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
 }
 
 export async function getActiveCategories(): Promise<Category[]> {

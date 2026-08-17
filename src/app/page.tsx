@@ -1,9 +1,21 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Utensils, QrCode, ArrowRight, ShieldCheck, Clock, Flame, Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Utensils, QrCode, ArrowRight, ShieldCheck, Clock, Flame, Sparkles, Search } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function HomePage() {
+  const router = useRouter();
+  const [tableInput, setTableInput] = useState('');
+
+  const handleGoToMenu = (e: React.FormEvent) => {
+    e.preventDefault();
+    const tableNum = tableInput.trim() || '1';
+    router.push(`/menu?table=${encodeURIComponent(tableNum)}`);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-stone-950 text-stone-100 selection:bg-amber-500 selection:text-stone-950">
       {/* Top Header Navigation */}
@@ -48,8 +60,8 @@ export default function HomePage() {
       </header>
 
       {/* Main Hero Container */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-12 text-center max-w-3xl mx-auto relative overflow-hidden">
-        {/* Subtle Background Radial Glow */}
+      <main className="flex-1 flex flex-col items-center justify-center px-4 py-10 sm:py-14 text-center max-w-2xl mx-auto relative overflow-hidden">
+        {/* Ambient Glow */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Sacred Mantras from Hotel Poster */}
@@ -59,62 +71,70 @@ export default function HomePage() {
           <span>॥ श्री स्वामी समर्थ ॥</span>
         </div>
 
-        {/* Contactless QR Pill */}
+        {/* Contactless QR Badge */}
         <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-stone-900 border border-amber-500/40 text-amber-400 text-xs font-extrabold shadow-lg mb-6">
           <QrCode className="h-4 w-4 stroke-[2.5]" />
-          <span className="uppercase tracking-wider">Contactless QR Food Ordering</span>
+          <span className="uppercase tracking-wider">Digital QR Food Ordering</span>
         </div>
 
-        {/* Hotel Title Banner Heading */}
-        <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white mb-3 leading-tight font-sans">
+        {/* Hotel Title Heading */}
+        <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white mb-2 leading-tight font-sans">
           श्री कुलस्वामिनी हॉटेल
         </h2>
 
         {/* Slogan */}
-        <p className="text-amber-400 font-extrabold text-lg sm:text-2xl italic tracking-wide mb-3">
+        <p className="text-amber-400 font-extrabold text-lg sm:text-2xl italic tracking-wide mb-4">
           &quot;स्वाद् जो लक्षात राहील...&quot;
         </p>
 
         <p className="text-stone-400 text-xs sm:text-sm max-w-md mb-8 leading-relaxed">
-          Explore our authentic Maharashtrian Fish Specials, Dum Biryani, Crispy Bombil Fry, Chicken & Mutton Thalis with Solkadhi. Scan the QR code on your dining table to order.
+          Fresh Malvani Fish Fry, Chilapi Thali, Chicken & Mutton Sukka, Dum Biryani, Solkadhi & Hot Bhakri. Order directly from your table.
         </p>
 
-        {/* Dining Table Quick Access Card */}
-        <Card className="w-full bg-stone-900/90 border-amber-500/30 p-2 text-left mb-10 shadow-2xl backdrop-blur-xs relative overflow-hidden">
-          <div className="absolute top-0 right-0 h-24 w-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none" />
+        {/* Direct Table Number Input & Menu CTA Card */}
+        <Card className="w-full bg-stone-900/90 border-amber-500/40 p-2 text-left mb-8 shadow-2xl backdrop-blur-xs relative overflow-hidden">
           <CardContent className="p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Sparkles className="h-4 w-4 text-amber-400" />
                 <span className="text-xs font-black uppercase tracking-wider text-amber-400">
-                  Select Dining Table to Order
+                  Enter Your Table Number To Order
                 </span>
               </div>
               <span className="text-[10px] font-extrabold bg-amber-500/20 text-amber-400 px-2.5 py-0.5 rounded-full border border-amber-500/30">
-                Live QR Entry
+                Direct Order
               </span>
             </div>
 
-            <p className="text-xs text-stone-400">
-              Click your dining table number below to open your digital menu:
-            </p>
+            <form onSubmit={handleGoToMenu} className="space-y-3 pt-1">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={tableInput}
+                  onChange={(e) => setTableInput(e.target.value)}
+                  placeholder="Enter Table Number (e.g. 1, 2, 5...)"
+                  className="w-full h-12 pl-4 pr-4 bg-stone-950 border border-stone-800 rounded-xl text-sm font-extrabold text-white placeholder-stone-500 focus:outline-none focus:border-amber-500 transition-all"
+                />
+              </div>
 
-            {/* Grid of Tables */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
-              {[1, 2, 3, 4, 5, 6].map((tableNum) => (
-                <Link
-                  key={tableNum}
-                  href={`/menu?table=${tableNum}`}
-                  className="flex items-center justify-between p-3.5 rounded-xl border border-stone-800 bg-stone-950/80 hover:bg-amber-500 hover:text-stone-950 hover:border-amber-400 text-stone-200 transition-all text-xs font-extrabold group shadow-sm active:scale-98"
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <button
+                  type="submit"
+                  className="h-12 bg-amber-500 hover:bg-amber-400 text-stone-950 font-black text-xs rounded-xl flex items-center justify-center space-x-2 shadow-lg transition-all active:scale-98"
                 >
-                  <div className="flex items-center space-x-2">
-                    <Utensils className="h-4 w-4 text-amber-400 group-hover:text-stone-950 transition-colors" />
-                    <span>Table {tableNum}</span>
-                  </div>
-                  <ArrowRight className="h-3.5 w-3.5 text-stone-500 group-hover:text-stone-950 transition-colors" />
+                  <span>ORDER FROM THIS TABLE</span>
+                  <ArrowRight className="h-4 w-4 stroke-[3]" />
+                </button>
+
+                <Link
+                  href="/menu"
+                  className="h-12 bg-stone-950 hover:bg-stone-800 border border-stone-800 text-stone-200 font-extrabold text-xs rounded-xl flex items-center justify-center space-x-2 transition-all"
+                >
+                  <Search className="h-4 w-4 text-amber-400" />
+                  <span>BROWSE FULL MENU</span>
                 </Link>
-              ))}
-            </div>
+              </div>
+            </form>
           </CardContent>
         </Card>
 
