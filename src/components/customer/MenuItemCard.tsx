@@ -18,6 +18,19 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
   const quantity = getItemQuantity(item.id);
   const isAvailable = item.is_available;
 
+  // Determine Veg vs Non-Veg badge based on dish/category keywords
+  const isVeg =
+    item.name.toLowerCase().includes('veg') ||
+    item.name.toLowerCase().includes('paneer') ||
+    item.name.toLowerCase().includes('kaju') ||
+    item.name.toLowerCase().includes('dal') ||
+    item.name.toLowerCase().includes('gobi') ||
+    item.name.toLowerCase().includes('papad') ||
+    item.name.toLowerCase().includes('roti') ||
+    item.name.toLowerCase().includes('chapati') ||
+    item.name.toLowerCase().includes('bhakri') ||
+    item.name.toLowerCase().includes('finger chips');
+
   return (
     <Card
       className={`overflow-hidden border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 transition-all shadow-xs flex flex-col justify-between ${
@@ -25,7 +38,7 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
       }`}
     >
       <div className="p-4 space-y-3">
-        {/* Header Photo & Availability */}
+        {/* Header Photo & Veg/Non-Veg Badge */}
         <div className="relative h-44 w-full rounded-xl bg-stone-100 dark:bg-stone-800 overflow-hidden border border-stone-200/60 dark:border-stone-800">
           {item.image_url ? (
             <Image
@@ -41,6 +54,25 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
               <Utensils className="h-8 w-8 stroke-[1.5]" />
             </div>
           )}
+
+          {/* Veg / Non-Veg Indicator Icon */}
+          <div className="absolute top-2.5 left-2.5 bg-white/90 dark:bg-stone-950/90 backdrop-blur-xs p-1 rounded-md border border-stone-200 dark:border-stone-800 shadow-sm flex items-center justify-center">
+            {isVeg ? (
+              <span
+                className="h-3.5 w-3.5 rounded-sm border-2 border-emerald-600 flex items-center justify-center"
+                title="Pure Veg"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+              </span>
+            ) : (
+              <span
+                className="h-3.5 w-3.5 rounded-sm border-2 border-rose-600 flex items-center justify-center"
+                title="Non-Veg Special"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-rose-600" />
+              </span>
+            )}
+          </div>
 
           {!isAvailable && (
             <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center">
