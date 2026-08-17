@@ -1,0 +1,23 @@
+# Render Blueprint Configuration for Hotel QR Ordering Web App
+# See https://render.com/docs/blueprint-spec for configuration syntax
+
+services:
+  - type: web
+    name: hotel-qr-ordering
+    env: node
+    region: singapore # Options: oregon, frankfurt, ohio, singapore
+    plan: free # Options: free, starter, standard, pro
+    buildCommand: npm run build
+    startCommand: npm run start
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false

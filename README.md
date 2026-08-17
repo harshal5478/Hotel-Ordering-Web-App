@@ -200,8 +200,12 @@ npm run start
 
 ---
 
-## 17. Vercel Deployment
-Deploy to Vercel by pushing your repository and adding environment variables in Vercel project settings. Read [docs/deployment.md](docs/deployment.md).
+## 17. Render Deployment
+Deploy to Render as a Next.js Web Service:
+1. Connect your repository on [dashboard.render.com](https://dashboard.render.com).
+2. Set Build Command: `npm run build` and Start Command: `npm run start`.
+3. Add Environment Variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SITE_URL`).
+4. Read [docs/deployment.md](docs/deployment.md) for full instructions.
 
 ---
 
