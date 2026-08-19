@@ -10,7 +10,7 @@ export const CategorySchema = z.object({
 export type CategoryFormInput = z.infer<typeof CategorySchema>;
 
 export const MenuItemSchema = z.object({
-  category_id: z.string().uuid('Please select a valid category'),
+  category_id: z.string().regex(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/, 'Please select a valid category'),
   name: z.string().min(1, 'Item name is required').max(150),
   description: z.string().max(500).optional().nullable(),
   price: z.number().min(0, 'Price must be greater than or equal to 0'),
