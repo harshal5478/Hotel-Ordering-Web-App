@@ -33,109 +33,101 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
 
   return (
     <Card
-      className={`overflow-hidden border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 transition-all shadow-xs flex flex-col justify-between ${
+      className={`relative overflow-hidden border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 transition-all shadow-xs ${
         !isAvailable ? 'opacity-65 grayscale-[30%]' : 'hover:border-amber-500/40'
       }`}
     >
-      <div className="p-4 space-y-3">
-        {/* Header Photo & Veg/Non-Veg Badge */}
-        <div className="relative h-44 w-full rounded-xl bg-stone-100 dark:bg-stone-800 overflow-hidden border border-stone-200/60 dark:border-stone-800">
-          {item.image_url ? (
-            <Image
-              src={item.image_url}
-              alt={item.name}
-              fill
-              loading="lazy"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover"
-            />
-          ) : (
-            <div className="h-full w-full flex items-center justify-center text-stone-400">
-              <Utensils className="h-8 w-8 stroke-[1.5]" />
+      <div className="p-3.5 flex gap-3">
+        {/* Left Side: Details */}
+        <div className="flex-1 flex flex-col justify-between min-w-0">
+          <div>
+            <div className="flex items-center space-x-1.5 mb-1">
+              {isVeg ? (
+                <span className="h-3 w-3 rounded-sm border-[1.5px] border-emerald-600 flex items-center justify-center shrink-0">
+                  <span className="h-1 w-1 rounded-full bg-emerald-600" />
+                </span>
+              ) : (
+                <span className="h-3 w-3 rounded-sm border-[1.5px] border-rose-600 flex items-center justify-center shrink-0">
+                  <span className="h-1 w-1 rounded-full bg-rose-600" />
+                </span>
+              )}
             </div>
-          )}
+            
+            <h3 className="font-extrabold text-sm text-stone-900 dark:text-stone-100 leading-snug truncate">
+              {item.name}
+            </h3>
+            
+            <div className="mt-0.5">
+              <span className="text-sm font-black text-amber-600 dark:text-amber-400">
+                {formatCurrency(item.price)}
+              </span>
+            </div>
 
-          {/* Veg / Non-Veg Indicator Icon */}
-          <div className="absolute top-2.5 left-2.5 bg-white/90 dark:bg-stone-950/90 backdrop-blur-xs p-1 rounded-md border border-stone-200 dark:border-stone-800 shadow-sm flex items-center justify-center">
-            {isVeg ? (
-              <span
-                className="h-3.5 w-3.5 rounded-sm border-2 border-emerald-600 flex items-center justify-center"
-                title="Pure Veg"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-              </span>
+            {item.description && (
+              <p className="text-[11px] text-stone-500 dark:text-stone-400 line-clamp-2 leading-relaxed mt-1.5 pr-2">
+                {item.description}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Right Side: Image and Action */}
+        <div className="flex flex-col items-center shrink-0 w-[110px]">
+          <div className="relative h-[110px] w-[110px] rounded-xl bg-stone-100 dark:bg-stone-800 overflow-hidden border border-stone-200/60 dark:border-stone-800">
+            {item.image_url ? (
+              <Image
+                src={item.image_url}
+                alt={item.name}
+                fill
+                loading="lazy"
+                sizes="110px"
+                className="object-cover"
+              />
             ) : (
-              <span
-                className="h-3.5 w-3.5 rounded-sm border-2 border-rose-600 flex items-center justify-center"
-                title="Non-Veg Special"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-rose-600" />
-              </span>
+              <div className="h-full w-full flex items-center justify-center text-stone-400">
+                <Utensils className="h-6 w-6 stroke-[1.5]" />
+              </div>
+            )}
+            
+            {!isAvailable && (
+              <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px] flex items-center justify-center">
+                <span className="bg-rose-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider shadow-md">
+                  Sold Out
+                </span>
+              </div>
             )}
           </div>
 
-          {!isAvailable && (
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center">
-              <span className="bg-rose-600 text-white text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-wider shadow-md">
-                Sold Out
-              </span>
-            </div>
-          )}
+          {/* Action Button - Overlapping Image */}
+          <div className="relative -mt-4 z-10 w-full px-1">
+            {!isAvailable ? (
+              <button
+                disabled
+                className="w-full h-8 rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-400 dark:text-stone-500 font-bold text-[10px] cursor-not-allowed uppercase shadow-sm border border-stone-300 dark:border-stone-700"
+              >
+                Unavailable
+              </button>
+            ) : quantity > 0 ? (
+              <div className="w-full h-8 bg-amber-500/10 rounded-lg border border-amber-500/30 flex items-center justify-center shadow-sm backdrop-blur-md overflow-hidden bg-white dark:bg-stone-900">
+                <QuantitySelector
+                  quantity={quantity}
+                  onIncrement={() => updateQuantity(item.id, quantity + 1)}
+                  onDecrement={() => updateQuantity(item.id, quantity - 1)}
+                  size="sm"
+                />
+              </div>
+            ) : (
+              <button
+                onClick={() => addToCart(item)}
+                className="w-full h-8 bg-amber-500 hover:bg-amber-400 text-stone-950 font-black text-xs rounded-lg flex items-center justify-center space-x-1 shadow-md active:scale-95 transition-all uppercase tracking-wide border border-amber-400"
+                aria-label={`Add ${item.name}`}
+              >
+                <Plus className="h-3 w-3 stroke-[3]" />
+                <span>ADD</span>
+              </button>
+            )}
+          </div>
         </div>
-
-        {/* Title, Description & Price */}
-        <div className="space-y-1">
-          <div className="flex justify-between items-start">
-            <h3 className="font-extrabold text-base text-stone-900 dark:text-stone-100 leading-snug">
-              {item.name}
-            </h3>
-          </div>
-
-          {item.description && (
-            <p className="text-xs text-stone-500 dark:text-stone-400 line-clamp-2 leading-relaxed">
-              {item.description}
-            </p>
-          )}
-
-          <div className="pt-1 flex items-baseline justify-between">
-            <span className="text-lg font-black text-amber-600 dark:text-amber-400">
-              {formatCurrency(item.price)}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Action Footer */}
-      <div className="p-4 pt-0">
-        {!isAvailable ? (
-          <button
-            disabled
-            className="w-full h-11 rounded-xl bg-stone-200 dark:bg-stone-800 text-stone-400 dark:text-stone-500 font-bold text-xs cursor-not-allowed"
-          >
-            Currently Unavailable
-          </button>
-        ) : quantity > 0 ? (
-          <div className="flex items-center justify-between bg-amber-500/10 p-1 rounded-xl border border-amber-500/30">
-            <span className="text-xs font-extrabold text-amber-700 dark:text-amber-400 pl-2">
-              In Cart
-            </span>
-            <QuantitySelector
-              quantity={quantity}
-              onIncrement={() => updateQuantity(item.id, quantity + 1)}
-              onDecrement={() => updateQuantity(item.id, quantity - 1)}
-              size="sm"
-            />
-          </div>
-        ) : (
-          <button
-            onClick={() => addToCart(item)}
-            className="w-full h-11 bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-black text-xs rounded-xl flex items-center justify-center space-x-1.5 shadow-md active:scale-98 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500"
-            aria-label={`Add ${item.name} to order for ${formatCurrency(item.price)}`}
-          >
-            <Plus className="h-4 w-4 stroke-[3]" />
-            <span>ADD TO ORDER</span>
-          </button>
-        )}
       </div>
     </Card>
   );
