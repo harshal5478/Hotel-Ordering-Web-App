@@ -22,6 +22,8 @@ interface CartContextType {
   getItemQuantity: (menuItemId: string) => number;
   totalItemsCount: number;
   subtotalAmount: number;
+  recentOrderIds: string[];
+  addRecentOrderId: (id: string) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -98,6 +100,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return '';
   });
 
+  const [recentOrderIds, setRecentOrderIds] = useState<string[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const saved = localStorage.getItem(CART_STORAGE_KEY);
+      if (saved) return JSON.parse(saved).recentOrderIds || [];
+    } catch {
+      // ignore
+    }
+    return [];
+  });
+
   // Save changes to localStorage
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -111,16 +124,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           customerName,
           customerPhone,
           orderNote,
+          recentOrderIds,
         })
       );
     } catch (e) {
       console.error('Failed to save cart state to storage', e);
     }
-  }, [cart, tableId, tableNumber, customerName, customerPhone, orderNote]);
+  }, [cart, tableId, tableNumber, customerName, customerPhone, orderNote, recentOrderIds]);
 
   const setTableInfo = (id: string, number: number) => {
     setTableId(id);
     setTableNumber(number);
+  };
+
+  const addRecentOrderId = (id: string) => {
+    setRecentOrderIds((prev) => {
+      // Keep only last 10 orders to avoid blowing up storage
+      const newOrders = [id, ...prev.filter(existing => existing !== id)].slice(0, 10);
+      return newOrders;
+    });
   };
 
   const addToCart = (menuItem: MenuItem, quantity = 1, note = '') => {
@@ -208,6 +230,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         getItemQuantity,
         totalItemsCount,
         subtotalAmount,
+        recentOrderIds,
+        addRecentOrderId,
       }}
     >
       {children}

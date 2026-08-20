@@ -2,6 +2,7 @@ import React from 'react';
 import { Utensils } from 'lucide-react';
 import { CustomerNavBar } from '@/components/customer/CustomerNavBar';
 import { CartProvider } from '@/context/CartContext';
+import { GlobalOrderNotifier } from '@/components/customer/GlobalOrderNotifier';
 
 export default function CustomerLayout({
   children,
@@ -10,6 +11,7 @@ export default function CustomerLayout({
 }) {
   return (
     <CartProvider>
+      <GlobalOrderNotifier />
       <div className="flex flex-col min-h-screen bg-stone-50 dark:bg-stone-950 pb-24 max-w-md mx-auto relative shadow-2xl border-x border-stone-200 dark:border-stone-800">
         {/* Top Mobile Header */}
         <header className="sticky top-0 z-40 bg-stone-900 text-white border-b border-stone-800 px-4 py-3 flex items-center justify-between">

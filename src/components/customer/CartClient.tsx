@@ -48,6 +48,7 @@ export function CartClient({ tableNumber }: CartClientProps) {
     clearCart,
     totalItemsCount,
     subtotalAmount,
+    addRecentOrderId,
   } = useCart();
 
   const [activeNoteInputId, setActiveNoteInputId] = useState<string | null>(null);
@@ -88,6 +89,7 @@ export function CartClient({ tableNumber }: CartClientProps) {
         toast.error(res.error || 'Failed to place order');
       } else {
         toast.success('Order placed successfully!');
+        addRecentOrderId(res.orderId);
         clearCart();
         router.push(`/order/${res.orderId}`);
       }
