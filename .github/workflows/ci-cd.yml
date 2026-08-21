@@ -63,3 +63,7 @@ jobs:
           context: .
           push: true
           tags: harshal5478/hotel-app:latest
+          build-args: |
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://ubdclczdxfonwrprpzyg.supabase.co' }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_pSEuJN2GcM8WZzsGWQoOEA_vaCMz6qV' }}
+            NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://hotel-ordering.vercel.app' }}
