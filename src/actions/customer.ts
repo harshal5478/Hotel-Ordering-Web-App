@@ -119,43 +119,27 @@ const KULSWAMINI_MENU_ITEMS: MenuItem[] = [
 export async function getValidatedTable(
   tableParam: string | undefined | null
 ): Promise<Table | null> {
-  const supabase = await createClient();
-
-  let targetNum = 1;
-  if (tableParam && typeof tableParam === 'string' && tableParam.trim() !== '') {
-    const trimmed = tableParam.trim();
-    const isNumeric = /^\d+$/.test(trimmed);
-    if (isNumeric) {
-      targetNum = parseInt(trimmed, 10);
-    } else {
-      const numMatch = trimmed.match(/\d+/);
-      if (numMatch) {
-        targetNum = parseInt(numMatch[0], 10);
-      }
-    }
-
-    let query = supabase.from('tables').select('*').eq('is_active', true);
-    if (isNumeric) {
-      query = query.eq('table_number', targetNum);
-    } else {
-      query = query.eq('qr_token', trimmed);
-    }
-
-    const { data } = await query.single();
-    if (data) {
-      return data as Table;
-    }
+  if (!tableParam || typeof tableParam !== 'string' || tableParam.trim() === '') {
+    return null;
   }
 
-  // Gracefully return table object matching requested table number
-  return {
-    id: `table-id-${targetNum}`,
-    table_number: targetNum,
-    qr_token: `${targetNum}`,
-    is_active: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  };
+  const trimmed = tableParam.trim();
+  const supabase = await createClient();
+
+  // ONLY lookup by the exact qr_token for security.
+  // Do not fallback to raw table_number lookups to prevent URL guessing.
+  const { data } = await supabase
+    .from('tables')
+    .select('*')
+    .eq('is_active', true)
+    .eq('qr_token', trimmed)
+    .maybeSingle();
+
+  if (data) {
+    return data as Table;
+  }
+
+  return null;
 }
 
 export async function getActiveCategories(): Promise<Category[]> {
