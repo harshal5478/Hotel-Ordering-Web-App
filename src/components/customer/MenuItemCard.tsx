@@ -31,7 +31,9 @@ export function MenuItemCard({ item, categoryName }: MenuItemCardProps) {
     item.name.toLowerCase().includes('roti') ||
     item.name.toLowerCase().includes('chapati') ||
     item.name.toLowerCase().includes('bhakri') ||
-    item.name.toLowerCase().includes('finger chips');
+    item.name.toLowerCase().includes('finger chips') ||
+    item.name.toLowerCase().includes('rice') ||
+    item.name.toLowerCase().includes('pakoda');
 
   return (
     <Card
