@@ -11,15 +11,17 @@ import { Card } from '@/components/ui/card';
 
 interface MenuItemCardProps {
   item: MenuItem;
+  categoryName?: string;
 }
 
-export function MenuItemCard({ item }: MenuItemCardProps) {
+export function MenuItemCard({ item, categoryName }: MenuItemCardProps) {
   const { getItemQuantity, addToCart, updateQuantity } = useCart();
   const quantity = getItemQuantity(item.id);
   const isAvailable = item.is_available;
 
   // Determine Veg vs Non-Veg badge based on dish/category keywords
   const isVeg =
+    categoryName?.toLowerCase().includes('veg') ||
     item.name.toLowerCase().includes('veg') ||
     item.name.toLowerCase().includes('paneer') ||
     item.name.toLowerCase().includes('kaju') ||

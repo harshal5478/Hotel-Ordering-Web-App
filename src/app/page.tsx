@@ -73,8 +73,7 @@ export default function HomePage() {
 
         {/* Contactless QR Badge */}
         <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-stone-900 border border-amber-500/40 text-amber-400 text-xs font-extrabold shadow-lg mb-6">
-          <QrCode className="h-4 w-4 stroke-[2.5]" />
-          <span className="uppercase tracking-wider">Digital QR Food Ordering</span>
+          <span className="uppercase tracking-wider">श्री म्हंकाळेश्वरं प्रसन्न</span>
         </div>
 
         {/* Hotel Title Heading */}
@@ -117,7 +116,7 @@ export default function HomePage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 gap-2">
                 <button
                   type="submit"
                   className="h-12 bg-amber-500 hover:bg-amber-400 text-stone-950 font-black text-xs rounded-xl flex items-center justify-center space-x-2 shadow-lg transition-all active:scale-98"
@@ -125,14 +124,6 @@ export default function HomePage() {
                   <span>ORDER FROM THIS TABLE</span>
                   <ArrowRight className="h-4 w-4 stroke-[3]" />
                 </button>
-
-                <Link
-                  href="/menu"
-                  className="h-12 bg-stone-950 hover:bg-stone-800 border border-stone-800 text-stone-200 font-extrabold text-xs rounded-xl flex items-center justify-center space-x-2 transition-all"
-                >
-                  <Search className="h-4 w-4 text-amber-400" />
-                  <span>BROWSE FULL MENU</span>
-                </Link>
               </div>
             </form>
           </CardContent>

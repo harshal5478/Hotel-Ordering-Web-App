@@ -69,7 +69,11 @@ export function CustomerMenuClient({
       <div className="space-y-3.5 pt-1">
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => (
-            <MenuItemCard key={item.id} item={item} />
+            <MenuItemCard 
+              key={item.id} 
+              item={item} 
+              categoryName={categories.find(c => c.id === item.category_id)?.name} 
+            />
           ))
         ) : searchQuery.trim() !== '' ? (
           <EmptyState
