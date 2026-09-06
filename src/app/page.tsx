@@ -7,15 +7,6 @@ import { Utensils, QrCode, ArrowRight, ShieldCheck, Clock, Flame, Sparkles, Sear
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function HomePage() {
-  const router = useRouter();
-  const [tableInput, setTableInput] = useState('');
-
-  const handleGoToMenu = (e: React.FormEvent) => {
-    e.preventDefault();
-    const tableNum = tableInput.trim() || '1';
-    router.push(`/menu?table=${encodeURIComponent(tableNum)}`);
-  };
-
   return (
     <div className="flex flex-col min-h-screen bg-stone-950 text-stone-100 selection:bg-amber-500 selection:text-stone-950">
       {/* Top Header Navigation */}
@@ -41,21 +32,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex space-x-2">
-            <Link
-              href="/admin/login"
-              className="text-xs font-bold px-3.5 py-2 rounded-xl border border-stone-800 bg-stone-900/90 hover:bg-stone-800 hover:border-amber-500/40 text-stone-200 transition-all shadow-sm"
-            >
-              Staff Portal
-            </Link>
-            <Link
-              href="/kitchen"
-              className="text-xs font-bold px-3.5 py-2 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 transition-all shadow-sm flex items-center space-x-1"
-            >
-              <Flame className="h-3.5 w-3.5 stroke-[2.5]" />
-              <span>Kitchen KDS</span>
-            </Link>
-          </div>
+
         </div>
       </header>
 
@@ -90,44 +67,30 @@ export default function HomePage() {
           Fresh Malvani Fish Fry, Chilapi Thali, Chicken & Mutton Sukka, Dum Biryani, Solkadhi & Hot Bhakri. Order directly from your table.
         </p>
 
-        {/* Direct Table Number Input & Menu CTA Card */}
-        <Card className="w-full bg-stone-900/90 border-amber-500/40 p-2 text-left mb-8 shadow-2xl backdrop-blur-xs relative overflow-hidden">
-          <CardContent className="p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Sparkles className="h-4 w-4 text-amber-400" />
-                <span className="text-xs font-black uppercase tracking-wider text-amber-400">
-                  Enter Your Table Number To Order
-                </span>
-              </div>
-              <span className="text-[10px] font-extrabold bg-amber-500/20 text-amber-400 px-2.5 py-0.5 rounded-full border border-amber-500/30">
-                Direct Order
-              </span>
+        {/* Portal Action Buttons */}
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <Link
+            href="/admin/login"
+            className="flex flex-col items-center justify-center space-y-2 p-6 rounded-2xl bg-stone-900/90 border border-stone-800 hover:border-amber-500/50 hover:bg-stone-800/80 transition-all shadow-xl group"
+          >
+            <div className="h-12 w-12 rounded-full bg-stone-950 flex items-center justify-center border border-stone-800 group-hover:border-amber-500/50 transition-colors">
+              <ShieldCheck className="h-6 w-6 text-stone-400 group-hover:text-amber-500 transition-colors" />
             </div>
+            <span className="text-lg font-black text-stone-100 group-hover:text-white mt-2">Staff Portal</span>
+            <span className="text-xs text-stone-400 text-center">Manage tables, orders, and QR codes</span>
+          </Link>
 
-            <form onSubmit={handleGoToMenu} className="space-y-3 pt-1">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={tableInput}
-                  onChange={(e) => setTableInput(e.target.value)}
-                  placeholder="Enter Table Number (e.g. 1, 2, 5...)"
-                  className="w-full h-12 pl-4 pr-4 bg-stone-950 border border-stone-800 rounded-xl text-sm font-extrabold text-white placeholder-stone-500 focus:outline-none focus:border-amber-500 transition-all"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 gap-2">
-                <button
-                  type="submit"
-                  className="h-12 bg-amber-500 hover:bg-amber-400 text-stone-950 font-black text-xs rounded-xl flex items-center justify-center space-x-2 shadow-lg transition-all active:scale-98"
-                >
-                  <span>ORDER FROM THIS TABLE</span>
-                  <ArrowRight className="h-4 w-4 stroke-[3]" />
-                </button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+          <Link
+            href="/kitchen"
+            className="flex flex-col items-center justify-center space-y-2 p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 hover:border-amber-500/60 transition-all shadow-xl group"
+          >
+            <div className="h-12 w-12 rounded-full bg-stone-950/50 flex items-center justify-center border border-amber-500/30 group-hover:border-amber-500/60 transition-colors">
+              <Flame className="h-6 w-6 text-amber-500 group-hover:text-amber-400 transition-colors" />
+            </div>
+            <span className="text-lg font-black text-amber-500 group-hover:text-amber-400 mt-2">Kitchen KDS</span>
+            <span className="text-xs text-amber-500/60 text-center">View and manage active orders</span>
+          </Link>
+        </div>
 
         {/* Feature Highlights Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left w-full">
